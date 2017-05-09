@@ -1,5 +1,8 @@
 <?php
 
+// Permission constants.
+define('TRANSCRIPTS_UI_ADMINISTER', 'administer transcripts ui');
+
 function transcripts_ui_tiers()
 {
     return variable_get('transcripts_ui_tiers', array()) + variable_get('transcripts_ui_hidden_tiers', array());
@@ -28,11 +31,10 @@ function transcripts_ui_init()
 
 function transcripts_ui_permission()
 {
-    $permissions = array();
-    $permissions['administer transcripts ui'] = array(
+  return array(TRANSCRIPTS_UI_ADMINISTER => array(
         'title' => t('Administer ui'),
+      )
     );
-    return $permissions;
 }
 
 function transcripts_ui_menu()
@@ -44,7 +46,7 @@ function transcripts_ui_menu()
         'description' => 'Administer Transcripts',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('transcripts_ui_admin'),
-        'access arguments' => array('administer transcripts ui'),
+        'access arguments' => array(TRANSCRIPTS_UI_ADMINISTER),
         'file' => 'transcripts_ui.admin.inc',
     );
     $items['admin/config/user-interface/transcripts/ui'] = array(
@@ -52,7 +54,7 @@ function transcripts_ui_menu()
         'description' => t('Transcripts UI settings'),
         'page callback' => 'drupal_get_form',
         'page arguments' => array('transcripts_ui_admin'),
-        'access arguments' => array('administer transcripts ui'),
+        'access arguments' => array(TRANSCRIPTS_UI_ADMINISTER),
         'file' => 'transcripts_ui.admin.inc',
         'type' => MENU_DEFAULT_LOCAL_TASK,
         'weight' => -20,
@@ -151,6 +153,11 @@ function transcripts_ui_render($ui)
 
 function transcripts_ui_tcu($sentence, $speaker_turn, $speaker_tiers = array(), $tier_list = array())
 {
+    if (array_search($sentence->or_speaker, $speaker_tiers) === FALSE) {
+      $config_speaker_names = variable_get('transcripts_ui_speaker_names');
+      $speaker_tiers[$sentence->or_speaker] = isset($config_speaker_names[$sentence->or_speaker]) ? $config_speaker_names[$sentence->or_speaker] : '';
+    }
+    
     $sid = $sentence->tcuid;
     $begin = isset($sentence->start) ? $sentence->start : 0;
     $end = isset($sentence->end) ? $sentence->end : 0;

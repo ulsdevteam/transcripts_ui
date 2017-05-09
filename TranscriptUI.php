@@ -41,17 +41,17 @@ class TranscriptUI
         $hitCount = 0;
 
         $last_speaker_tiers = array();
+        $last_speaker = '';
         $tcus = array();
 
         foreach ($timecodeunits as $sentence) {
             $speaker_tiers = array();
+            $speaker = $sentence->or_speaker;
             foreach (array_keys($speakernames) as $tier) {
                 if (isset($sentence->$tier)) {
                     $speaker_tiers[$tier] = $sentence->$tier;
                 }
             }
-            $speaker = implode('/', array_values($speaker_tiers));
-
             $tier_list = array();
             foreach (array_keys($tiers) as $tier) {
                 if (isset($sentence->$tier)) {
@@ -70,9 +70,11 @@ class TranscriptUI
                 }
             }
 
-            $speaker_turn = $speaker_tiers == $last_speaker_tiers ? 'same-speaker' : 'new-speaker';
+//            $speaker_turn = ($speaker_tiers == $last_speaker_tiers) ? 'same-speaker' : 'new-speaker';
+            $speaker_turn = (!$speaker || ($speaker == $last_speaker)) ? 'same-speaker' : 'new-speaker';
             $tcus[] = transcripts_ui_tcu($sentence, $speaker_turn, $speaker_tiers, $tier_list);
-            $last_speaker_tiers = $speaker_tiers;
+//            $last_speaker_tiers = $speaker_tiers;
+            $last_speaker = $speaker;
         }
 
         $this->hitCount = $hitCount;
