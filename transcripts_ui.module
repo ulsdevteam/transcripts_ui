@@ -155,7 +155,7 @@ function transcripts_ui_tcu($sentence, $speaker_turn, $speaker_tiers = array(), 
 {
     if (array_search($sentence->or_speaker, $speaker_tiers) === FALSE) {
       $config_speaker_names = variable_get('transcripts_ui_speaker_names');
-      $speaker_tiers[$sentence->or_speaker] = $config_speaker_names['Ann'];
+      $speaker_tiers[$sentence->or_speaker] = isset($config_speaker_names[$sentence->or_speaker]) ? $config_speaker_names[$sentence->or_speaker] : '';
     }
     
     $sid = $sentence->tcuid;

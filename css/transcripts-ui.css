@@ -385,3 +385,11 @@
     left:0.5rem;
     color: #eee;
 }
+
+/* ------ transcript class colors, the bg prefix implies a background ------- */
+.yellow { color: #FF0 }
+.white { color: white }
+.red { color: red }
+.blue { color: blue }
+.bgblack { background-color: black }
+.bgwhite { background-color: white }
